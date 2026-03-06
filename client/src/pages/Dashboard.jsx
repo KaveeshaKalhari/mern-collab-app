@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import API from "../api";
+import toast from "react-hot-toast";
 
 export default function Dashboard() {
     const [documents, setDocuments] = useState([]);
@@ -28,18 +29,19 @@ export default function Dashboard() {
 
     const createDocument = async () => {
         if (!title.trim()) {
-            alert("Please enter a document title");
+            toast.error("Please enter a document title");
             return;
         }
         if (title.trim().length < 3) {
-            alert("Title must be at least 3 characters");
+            toast.error("Title must be at least 3 characters");
             return;
         }
         try {
             const res = await API.post("/documents", { title, content: "" });
+            toast.success("Document created!");
             navigate(`/document/${res.data._id}`);
         } catch (err) {
-            console.error(err);
+            toast.error("Failed to create document");
         }
     };
 
@@ -56,6 +58,7 @@ export default function Dashboard() {
     const handleLogout = () => {
         logout();
         localStorage.removeItem("token");
+        toast.success("Logged out successfully");
         navigate("/login");
     };
 

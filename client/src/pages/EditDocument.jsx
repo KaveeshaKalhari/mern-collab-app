@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import API from "../api";
+import toast from "react-hot-toast";
 
 export default function EditDocument() {
     const { id } = useParams();
@@ -37,26 +38,27 @@ export default function EditDocument() {
                 title,
                 content: editor.getHTML(),
             });
-            setMessage("✅ Saved successfully!");
-            setTimeout(() => setMessage(""), 3000);
+            toast.success("Document saved!");
         } catch (err) {
-            setMessage("❌ Failed to save.");
+            toast.error("Failed to save document");
         } finally {
             setSaving(false);
         }
     };
 
     const addCollaborator = async () => {
-        if (!collaboratorEmail.trim()) return;
+        if (!collaboratorEmail.trim()) {
+            toast.error("Please enter an email address");
+            return;
+        }
         try {
             await API.post(`/documents/${id}/collaborators`, {
                 email: collaboratorEmail,
             });
-            setMessage("✅ Collaborator added!");
+            toast.success("Collaborator added!");
             setCollaboratorEmail("");
-            setTimeout(() => setMessage(""), 3000);
         } catch (err) {
-            setMessage("❌ User not found or already added.");
+            toast.error("User not found or already a collaborator");
         }
     };
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import API from "../api";
+import toast from "react-hot-toast";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -14,7 +15,8 @@ export default function Login() {
     const validate = () => {
         const newErrors = {};
         if (!email.trim()) newErrors.email = "Email is required";
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = "Enter a valid email";
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+            newErrors.email = "Enter a valid email";
         if (!password) newErrors.password = "Password is required";
         return newErrors;
     };
@@ -31,8 +33,10 @@ export default function Login() {
             const res = await API.post("/auth/login", { email, password });
             login(res.data.user, res.data.token);
             localStorage.setItem("token", res.data.token);
+            toast.success(`Welcome back, ${res.data.user.name}!`);
             navigate("/dashboard");
         } catch (err) {
+            toast.error("Invalid email or password");
             setErrors({ general: "Invalid email or password" });
         } finally {
             setLoading(false);
@@ -46,32 +50,24 @@ export default function Login() {
                     Welcome Back
                 </h2>
 
-                {errors.general && (
-                    <p className="bg-red-100 text-red-600 p-3 rounded mb-4 text-sm">
-                        {errors.general}
-                    </p>
-                )}
-
-                {/* Email */}
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-medium mb-1">Email</label>
                     <input
                         type="email"
                         value={email}
-                        onChange={(e) => { setEmail(e.target.value); setErrors({...errors, email: ""}); }}
+                        onChange={(e) => { setEmail(e.target.value); setErrors({ ...errors, email: "" }); }}
                         className={`w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email ? "border-red-400" : "border-gray-300"}`}
                         placeholder="you@example.com"
                     />
                     {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                 </div>
 
-                {/* Password */}
                 <div className="mb-6">
                     <label className="block text-gray-700 text-sm font-medium mb-1">Password</label>
                     <input
                         type="password"
                         value={password}
-                        onChange={(e) => { setPassword(e.target.value); setErrors({...errors, password: ""}); }}
+                        onChange={(e) => { setPassword(e.target.value); setErrors({ ...errors, password: "" }); }}
                         className={`w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.password ? "border-red-400" : "border-gray-300"}`}
                         placeholder="••••••••"
                     />
