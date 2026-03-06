@@ -47,4 +47,18 @@ router.post('/:id/collaborators', auth, async (req, res) => {
   res.json(doc);
 });
 
+// Delete document
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const doc = await Document.findById(req.params.id);
+    if (!doc) return res.status(404).json({ message: 'Document not found' });
+    if (doc.owner.toString() !== req.user.id)
+      return res.status(403).json({ message: 'Only the owner can delete this document' });
+    await Document.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Document deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;
