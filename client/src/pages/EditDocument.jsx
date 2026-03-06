@@ -98,36 +98,56 @@ export default function EditDocument() {
                 />
 
                 {/* Editor Toolbar */}
-                <div className="bg-white rounded-t-lg border border-gray-200 px-4 py-2 flex gap-2 flex-wrap">
-                    <button onClick={() => editor.chain().focus().toggleBold().run()}
-                            className={`px-3 py-1 rounded text-sm font-bold ${editor?.isActive("bold") ? "bg-blue-100 text-blue-700" : "hover:bg-gray-100"}`}>
-                        B
-                    </button>
-                    <button onClick={() => editor.chain().focus().toggleItalic().run()}
-                            className={`px-3 py-1 rounded text-sm italic ${editor?.isActive("italic") ? "bg-blue-100 text-blue-700" : "hover:bg-gray-100"}`}>
-                        I
-                    </button>
-                    <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                            className={`px-3 py-1 rounded text-sm ${editor?.isActive("heading", { level: 1 }) ? "bg-blue-100 text-blue-700" : "hover:bg-gray-100"}`}>
-                        H1
-                    </button>
-                    <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                            className={`px-3 py-1 rounded text-sm ${editor?.isActive("heading", { level: 2 }) ? "bg-blue-100 text-blue-700" : "hover:bg-gray-100"}`}>
-                        H2
-                    </button>
-                    <button onClick={() => editor.chain().focus().toggleBulletList().run()}
-                            className={`px-3 py-1 rounded text-sm ${editor?.isActive("bulletList") ? "bg-blue-100 text-blue-700" : "hover:bg-gray-100"}`}>
-                        • List
-                    </button>
-                    <button onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                            className={`px-3 py-1 rounded text-sm ${editor?.isActive("orderedList") ? "bg-blue-100 text-blue-700" : "hover:bg-gray-100"}`}>
-                        1. List
-                    </button>
-                    <button onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                            className={`px-3 py-1 rounded text-sm ${editor?.isActive("codeBlock") ? "bg-blue-100 text-blue-700" : "hover:bg-gray-100"}`}>
-                        {"</>"}
-                    </button>
-                </div>
+                {/* Editor Toolbar */}
+                {editor && (
+                    <div className="bg-white rounded-t-lg border border-gray-200 px-4 py-2 flex gap-2 flex-wrap">
+                        <button
+                            onClick={() => editor.chain().focus().toggleBold().run()}
+                            className={`px-3 py-1 rounded text-sm font-bold border ${editor.isActive("bold") ? "bg-blue-600 text-white border-blue-600" : "border-gray-300 hover:bg-gray-100"}`}>
+                            B
+                        </button>
+                        <button
+                            onClick={() => editor.chain().focus().toggleItalic().run()}
+                            className={`px-3 py-1 rounded text-sm italic border ${editor.isActive("italic") ? "bg-blue-600 text-white border-blue-600" : "border-gray-300 hover:bg-gray-100"}`}>
+                            I
+                        </button>
+                        <div className="border-l border-gray-300 mx-1" />
+                        <button
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                            className={`px-3 py-1 rounded text-sm font-semibold border ${editor.isActive("heading", { level: 1 }) ? "bg-blue-600 text-white border-blue-600" : "border-gray-300 hover:bg-gray-100"}`}>
+                            H1
+                        </button>
+                        <button
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                            className={`px-3 py-1 rounded text-sm font-semibold border ${editor.isActive("heading", { level: 2 }) ? "bg-blue-600 text-white border-blue-600" : "border-gray-300 hover:bg-gray-100"}`}>
+                            H2
+                        </button>
+                        <div className="border-l border-gray-300 mx-1" />
+                        <button
+                            onClick={() => editor.chain().focus().toggleBulletList().run()}
+                            className={`px-3 py-1 rounded text-sm border ${editor.isActive("bulletList") ? "bg-blue-600 text-white border-blue-600" : "border-gray-300 hover:bg-gray-100"}`}>
+                            • List
+                        </button>
+                        <button
+                            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                            className={`px-3 py-1 rounded text-sm border ${editor.isActive("orderedList") ? "bg-blue-600 text-white border-blue-600" : "border-gray-300 hover:bg-gray-100"}`}>
+                            1. List
+                        </button>
+                        <div className="border-l border-gray-300 mx-1" />
+                        <button
+                            onClick={() => editor.chain().focus().undo().run()}
+                            disabled={!editor.can().undo()}
+                            className="px-3 py-1 rounded text-sm border border-gray-300 hover:bg-gray-100 disabled:opacity-30">
+                            ↩
+                        </button>
+                        <button
+                            onClick={() => editor.chain().focus().redo().run()}
+                            disabled={!editor.can().redo()}
+                            className="px-3 py-1 rounded text-sm border border-gray-300 hover:bg-gray-100 disabled:opacity-30">
+                            ↪
+                        </button>
+                    </div>
+                )}
 
                 {/* Editor Content */}
                 <div className="bg-white border border-t-0 border-gray-200 rounded-b-lg p-4 min-h-64 prose max-w-none">
